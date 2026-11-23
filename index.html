@@ -315,6 +315,15 @@
     loadError = ""; render();
     initSupabase();
   };
+  app.resetSupaConfig = function () {
+    var cfg = getSupaConfig();
+    ui.drafts.supaUrl = cfg.url || "";
+    ui.drafts.supaKey = "";
+    setSupaConfig("", "");
+    loadError = "";
+    supabaseReady = false;
+    render();
+  };
   app.claimAdmin = function () {
     var code = (ui.drafts.passcode || "").trim();
     if (code.length < 4) { ui.lockError = "Kies een code van minstens 4 tekens."; render(); return; }
@@ -678,7 +687,11 @@
     return '<div class="lock-wrap"><div class="lock-box">' + alkmaarWapen(56) + '<div class="onboard-title">Laden…</div></div></div>';
   }
   function renderConnectError() {
-    return '<div class="lock-wrap"><div class="lock-box">' + alkmaarWapen(56) + '<h1 class="onboard-title">Kan niet verbinden</h1><p class="onboard-sub">' + esc(loadError) + '</p><button class="btn-primary" onclick="location.reload()">Opnieuw proberen</button></div></div>';
+    var html = '<div class="lock-wrap"><div class="lock-box">' + alkmaarWapen(56) + '<h1 class="onboard-title">Kan niet verbinden</h1><p class="onboard-sub">' + esc(loadError) + '</p>';
+    html += '<button class="btn-primary" style="margin-bottom:8px" onclick="location.reload()">Opnieuw proberen</button>';
+    html += '<button class="btn-ghost-sm" style="width:100%;justify-content:center" onclick="app.resetSupaConfig()">Andere Project URL / sleutel invullen</button>';
+    html += "</div></div>";
+    return html;
   }
   function renderSupaSetup() {
     var html = '<div class="lock-wrap"><div class="lock-box">' + alkmaarWapen(56);
@@ -1052,3 +1065,4 @@
   }
 })();
 </script>
+
